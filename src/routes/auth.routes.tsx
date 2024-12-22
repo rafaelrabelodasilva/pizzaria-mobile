@@ -1,18 +1,17 @@
-//Página que apenas usuários não logados podem acessar
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SignIn from '../pages/SignIn';
 
-import SignIn from "../pages/SignIn";
+const Stack = createNativeStackNavigator();
 
-const stack = createNativeStackNavigator();
-
-function AuthRoutes() {
-  return (
-    <stack.Navigator>
-      <stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}} />
-    </stack.Navigator>
-  );
+function AuthRoutes(){
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  )
 }
+
 
 export default AuthRoutes;
