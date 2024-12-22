@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Modal, 
+  Modal,
   FlatList
 } from "react-native";
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
@@ -101,16 +101,31 @@ export default function Order() {
   }
 
   async function handleAdd() {
-    console.log('CLICOU')
+    const response = await api.post('/order/add', {
+      order_id: route.params?.order_id,
+      product_id: productSelected?.id,
+      amount: Number(amount)
+    })
+
+    let data = {
+      id: response.data.id,
+      product_id: productSelected?.id as string,
+      name: productSelected?.name as string,
+      amount
+    }
+
+    setItems(oldArray => [...oldArray, data])
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Mesa: {route.params.number}</Text>
-        <TouchableOpacity onPress={handleCloseOrder}>
-          <Feather name="trash-2" size={28} color="#FF3F4b" />
-        </TouchableOpacity>
+        {items.length === 0 && (
+          <TouchableOpacity onPress={handleCloseOrder}>
+            <Feather name="trash-2" size={28} color="#FF3F4b" />
+          </TouchableOpacity>
+        )}
       </View>
 
       {category.length !== 0 && (
@@ -122,7 +137,7 @@ export default function Order() {
       )}
 
       {products.length !== 0 && (
-        <TouchableOpacity style={styles.input} onPress={ () => setModalProductVisible(true)}>
+        <TouchableOpacity style={styles.input} onPress={() => setModalProductVisible(true)}>
           <Text style={{ color: '#FFF' }}>
             {productSelected?.name}
           </Text>
@@ -145,8 +160,8 @@ export default function Order() {
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.button, {opacity: items.length === 0 ? 0.3 : 1}]}
+        <TouchableOpacity
+          style={[styles.button, { opacity: items.length === 0 ? 0.3 : 1 }]}
           disabled={items.length === 0}
         >
           <Text style={styles.buttonText}>Avançar</Text>
@@ -158,7 +173,7 @@ export default function Order() {
         style={{ flex: 1, marginTop: 24 }}
         data={items}
         keyExtractor={(item) => item.id}
-        renderItem={ ({item}) => <ListItem data={item} /> }
+        renderItem={({ item }) => <ListItem data={item} />}
       />
 
       <Modal
@@ -169,7 +184,7 @@ export default function Order() {
         <ModalPicker
           handleCloseModal={() => setModalCategoryVisible(false)}
           options={category}
-          selectedItem={ handleChangeCategory }
+          selectedItem={handleChangeCategory}
         />
       </Modal>
 
@@ -181,7 +196,7 @@ export default function Order() {
         <ModalPicker
           handleCloseModal={() => setModalProductVisible(false)}
           options={products}
-          selectedItem={ handleChangeProduct }
+          selectedItem={handleChangeProduct}
         />
       </Modal>
 
